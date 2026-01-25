@@ -10,7 +10,7 @@ This project addresses a real-world e-commerce problem: predicting customer chur
 1. Overview
 2. Exploratory Data Analysis (EDA)
 3. Churn Prediction Model
-4. Customer Segmentation
+4. Churn Segmentation
 
 ---
 
@@ -304,7 +304,7 @@ These results demonstrate that the tuned model generalizes well to unseen data w
 
 ---
 
-## Part III: Customer Segmentation
+## Part III: Churn Segmentation
 In this phase, **unsupervised learning** is applied to gain deeper insights into **churned users only**, with the objective of identifying distinct behavioral segments within this high-risk group. Instead of predicting churn, this step focuses on **understanding *how* and *why* different groups of users leave**, enabling more targeted and effective retention strategies.
 
 ### Step 1: Feature Engineering
