@@ -159,8 +159,7 @@ plt.show()
 - Based on these findings, the next step focuses on a deeper analysis of the **top 5 features** to understand how each factor influences churn behavior and to derive actionable recommendations for reducing customer attrition.
 
 **Box Plot - Analyse Top Features**
-
-<img width="1824" height="900" alt="box plot" src="https://github.com/user-attachments/assets/fe72a003-e7aa-47a2-ba81-d12c2a1d4691" />
+<img width="1824" height="817" alt="box plot" src="https://github.com/user-attachments/assets/d2f8ff15-2065-4da5-a5c6-c2825c1f174d" />
 
 ### Key Insights & Recommendations to Reduce Churn
 | Feature | Box Plot Observation | Key Insight | Recommendation |
@@ -306,6 +305,8 @@ These results demonstrate that the tuned model generalizes well to unseen data w
 ---
 
 ## Customer Segmentation
+- In this phase, **unsupervised learning** is applied to gain deeper insights into **churned users only**, with the objective of identifying distinct behavioral segments within this high-risk group.
+- Instead of predicting churn, this step focuses on **understanding *how* and *why* different groups of users leave**, enabling more targeted and effective retention strategies.
 ### Feature Engineering
 
 ### Apply K Means Model
