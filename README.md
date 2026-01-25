@@ -16,15 +16,15 @@ This project addresses a real-world e-commerce problem: predicting customer chur
 
 ## Overview
 ### Objective
-- This project analyzes customer churn behavior for an e-commerce company and translates data into **clear business insights** that support customer retention and targeted marketing strategies.
-- Instead of focusing only on model performance, the project emphasizes **understanding customer behavior**, **identifying churn drivers**, and **turning analysis results into actionable recommendations** for the business.
+- This project analyzes customer churn behavior for an e-commerce company and translates data into clear business insights that support **customer retention** and **targeted marketing strategies**.
+- Instead of focusing only on model performance, the project emphasizes **understanding customer behavior**, **identifying churn drivers**, and turning analysis results into actionable recommendations for the business.
 
 ### This project aims to
-- Analyze behavioral differences between churned and active customers using EDA
-- Identify key churn drivers that impact customer retention
-- Predict churn risk to help the business prioritize high-risk customers
-- Segment churned customers into distinct groups based on behavior patterns
-- Support data-driven decisions for personalized promotions and retention campaigns
+- Analyze behavioral differences between churned and active customers using EDA.
+- Identify key churn drivers that impact customer retention.
+- Predict churn risk to help the business prioritize high-risk customers.
+- Segment churned customers into distinct groups based on behavior patterns.
+- Support data-driven decisions for personalized promotions and retention campaigns.
 
 ### Main business questions addressed
 - What behaviors are most commonly associated with customer churn?
@@ -308,8 +308,59 @@ These results demonstrate that the tuned model generalizes well to unseen data w
 - In this phase, **unsupervised learning** is applied to gain deeper insights into **churned users only**, with the objective of identifying distinct behavioral segments within this high-risk group.
 - Instead of predicting churn, this step focuses on **understanding *how* and *why* different groups of users leave**, enabling more targeted and effective retention strategies.
 ### Feature Engineering
+**Encoding**
+```python
+df_churn =df[df['Churn'] == 1]
+df_churn.drop(columns=['Churn'], inplace=True)
+df_churn.head()
+
+df_encoded_churn = df_encoded[df_encoded['Churn'] == 1]
+df_encoded_churn = df_encoded_churn.drop(columns=['Churn'])
+```
+After encoding, dataset contains **948 rows** and **26 features**.
+
+**Dimension Reduction**
+```python
+from sklearn.decomposition import PCA
+
+pca = PCA(n_components=3)
+pca.fit(df_encoded_churn)
+PCA_ds = pd.DataFrame(pca.transform(df_encoded_churn), columns=(["col1","col2", "col3"]))
+PCA_ds
+```
+<img width="268" height="363" alt="image" src="https://github.com/user-attachments/assets/0e150da7-bf6f-4e0c-8015-89cab19eb450" />
+
+```python
+pca.explained_variance_ratio_
+```
+```
+array([0.91241607, 0.04239377, 0.01706041])
+```
+The PCA results show that the first three principal components explain over **95% of the total variance**, with the first component alone accounting for more than **91%**.
+
+This confirms that the churned-user behavior can be effectively represented in a low-dimensional space without significant information loss. As a result, these components provide a suitable foundation for clustering analysis, improving both computational efficiency and cluster separability.
 
 ### Apply K Means Model
+**Choosing K**
+```python
+from sklearn.cluster import KMeans
+
+ss = []
+max_clusters = 10
+for i in range(1, max_clusters+1):
+    kmeans = KMeans(n_clusters=i, init='k-means++', random_state=42)
+    kmeans.fit(PCA_ds)
+    # Inertia method returns WCSS for that model
+    ss.append(kmeans.inertia_)
+
+# Plot the Elbow method
+plt.figure(figsize=(10,5))
+plt.plot(range(1, max_clusters+1), ss, marker='o', linestyle='--')
+plt.title('Elbow Method')
+plt.xlabel('Number of clusters')
+plt.ylabel('WCSS')
+plt.show()
+```
 
 ### Model Evaluation
 
