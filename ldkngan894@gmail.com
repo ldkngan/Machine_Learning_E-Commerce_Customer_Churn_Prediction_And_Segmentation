@@ -361,7 +361,83 @@ plt.xlabel('Number of clusters')
 plt.ylabel('WCSS')
 plt.show()
 ```
+<img width="759" height="421" alt="image" src="https://github.com/user-attachments/assets/1eba358e-6852-487b-ba90-4c8dc2966d09" />
 
+We choose **k = 4**.
+
+**Apply K-Means**
+```python
+# Initialize K-Means with 4 clusters
+kmeans = KMeans(n_clusters=4, init='k-means++', random_state=42)
+
+# Apply K-Means
+predicted_labels = kmeans.fit_predict(PCA_ds)
+
+# Add cluster labels to dataframe
+PCA_ds['clusters']=predicted_labels
+df_churn['clusters']=predicted_labels
+```
 ### Model Evaluation
+**Silhouette Score**
+```python
+from sklearn.metrics import silhouette_score
+
+sil_score = silhouette_score(PCA_ds, predicted_labels)
+print(sil_score)
+```
+The K-Means model with **k = 4** achieves a silhouette score of **0.46**, indicating a reasonable balance between cluster cohesion and separation.
+
+This suggests that churned users can be meaningfully segmented into four distinct behavioral groups. While some overlap between clusters remains, the segmentation is sufficiently clear to support cluster profiling and the derivation of targeted retention recommendations.
+
+**Apply Random Forest Model**
+```python
+df_encoded_churn['clusters'] = predicted_labels
+
+X = df_encoded_churn.drop(columns={'clusters'})
+y = df_encoded_churn['clusters']
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42, stratify=y)
+
+from sklearn.ensemble import RandomForestClassifier
+
+clf_rand_churn = RandomForestClassifier(max_depth=15, random_state=0, n_estimators = 100, class_weight='balanced')
+
+clf_rand_churn.fit(x_train, y_train)
+y_pre_train = clf_rand_churn.predict(x_test) # Predict back on train to check overfit
+balanced_accuracy_val = balanced_accuracy_score(y_test, y_pre_train)
+
+print(balanced_accuracy_val)
+```
+The model achieved a **balanced accuracy of 0.97**, indicating that the derived clusters are highly separable and well-defined in the feature space.
+
+**Show Feature Importance**
+```python
+feats = {} # a dict to hold feature_name: feature_importance
+for feature, importance in zip(x_test.columns, clf_rand_churn.feature_importances_):
+    feats[feature] = importance # add the name/value pair
+
+importances = pd.DataFrame.from_dict(feats, orient='index').rename(columns={0: 'Gini-importance'})
+importances = importances.sort_values(by='Gini-importance', ascending=True)
+
+importances = importances.reset_index()
+
+# Create bar chart
+plt.figure(figsize=(10, 10))
+plt.barh(importances.tail(20)['index'][:20], importances.tail(20)['Gini-importance'])
+
+plt.title('Feature Importance')
+
+# Show plot
+plt.show()
+```
+<img width="854" height="667" alt="image" src="https://github.com/user-attachments/assets/078d8a8c-d176-4fa0-bc9d-b2ae4447999e" />
+
+The feature importance analysis indicates that the churn user clusters are primarily driven by three key factors: **CashbackAmount**, **PreferredOrderCat**, and **DaySinceLastOrder**. 
+
+The next step focuses on **exploratory data analysis (EDA)** of these top features to clearly interpret each churn segment and translate the clustering results into actionable business recommendations.
+
+**EDA top features**
+<img width="1787" height="530" alt="image" src="https://github.com/user-attachments/assets/5d548b30-0f5a-42a9-97c1-5042010ce2f5" />
 
 ### Conclusion
