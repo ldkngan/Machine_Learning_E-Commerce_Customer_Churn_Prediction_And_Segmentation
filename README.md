@@ -440,4 +440,7 @@ The next step focuses on **exploratory data analysis (EDA)** of these top featur
 **EDA top features**
 <img width="1787" height="530" alt="image" src="https://github.com/user-attachments/assets/5d548b30-0f5a-42a9-97c1-5042010ce2f5" />
 
+**Distribution of Clusters**
+<img width="569" height="453" alt="image" src="https://github.com/user-attachments/assets/fcdc9148-e94b-4b82-9727-3b36b76752f4" />
+
 ### Conclusion
