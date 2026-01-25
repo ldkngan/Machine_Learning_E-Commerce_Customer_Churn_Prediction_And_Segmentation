@@ -38,8 +38,8 @@ This project addresses a real-world e-commerce problem: predicting customer chur
 
 ---
 
-## Exploratory Data Analysis
-### Data Preprocessing
+## Part I: Exploratory Data Analysis
+### Step 1: Data Preprocessing
 This step ensures the dataset is clean, consistent, and suitable for modeling. The following preprocessing actions were performed:
 
 **Handling Missing Information**
@@ -57,7 +57,7 @@ This step ensures the dataset is clean, consistent, and suitable for modeling. T
 After completing the preprocessing steps, the final dataset contains **5,630 rows** and **20 features**.
 The dataset is fully prepared for modeling, with no remaining missing values, duplicated records, or same-meaning categorical values, ensuring consistency and reliability for downstream analysis, churn prediction and churn segmentation.
 
-### Feature Engineering
+### Step 2: Feature Engineering
 In this step, raw variables were transformed into a machine-learning-ready format to improve model compatibility and performance.
 
 ```python
@@ -74,7 +74,7 @@ df_encoded = pd.get_dummies(df, columns=list_encode_columns, drop_first=True )
 
 This feature engineering step enables machine learning models to interpret categorical customer attributes correctly and prepares the dataset for scaling and model training.
 
-### Apply base Random Forest model
+### Step 3: Apply base Random Forest model
 This section applies a baseline Random Forest model to understand key drivers of customer churn and extract actionable insights from feature importance.
 
 **Split train/test set**
@@ -130,7 +130,7 @@ Test Recall: 0.9969040247678018
 
 Based on the strong recall performance and acceptable generalization on the test set, the Random Forest model was used to extract **feature importance** in order to identify the key factors driving customer churn.
 
-### Analyse Top 5 Features from Random Forest model
+### Step 4: Analyse Top 5 Features from Random Forest model
 **Show Feature Importance**
 ```python
 feats = {} # a dict to hold feature_name: feature_importance
@@ -172,8 +172,8 @@ plt.show()
 
 ---
 
-## Churn Prediction Model
-### Baseline Model
+## Part II: Churn Prediction Model
+### Step 1: Baseline Model
 In this phase, a baseline machine learning model is built to establish an initial performance benchmark for churn prediction. A baseline model is trained using default or minimally adjusted parameters on the preprocessed and engineered dataset. Model performance is evaluated on a hold-out test set using appropriate metrics for imbalanced data, such as recall and balanced accuracy.
 ```python
 from sklearn.pipeline import Pipeline
@@ -235,7 +235,7 @@ Among the baseline models, **Random Forest** clearly outperforms the others acro
 
 Based on these results, **Random Forest** is selected as the **baseline model** for further improvement. The next step focuses on **hyperparameter tuning** to enhance recall and balanced accuracy while controlling overfitting.
 
-### Hyperparameter Tuning
+### Step 2: Hyperparameter Tuning
 ```python
 from sklearn.model_selection import StratifiedKFold
 
@@ -281,7 +281,7 @@ print("Balanced Accuracy:", rf_grid.best_score_)
 Best Parameters:  {'bootstrap': False, 'max_depth': None, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}
 Balanced Accuracy: 0.8980785925441322
 ```
-### Model Evaluation
+### Step 3: Model Evaluation
 ```python
 best_model = rf_grid.best_estimator_
 
@@ -304,10 +304,10 @@ These results demonstrate that the tuned model generalizes well to unseen data w
 
 ---
 
-## Customer Segmentation
-- In this phase, **unsupervised learning** is applied to gain deeper insights into **churned users only**, with the objective of identifying distinct behavioral segments within this high-risk group.
-- Instead of predicting churn, this step focuses on **understanding *how* and *why* different groups of users leave**, enabling more targeted and effective retention strategies.
-### Feature Engineering
+## Part III: Customer Segmentation
+In this phase, **unsupervised learning** is applied to gain deeper insights into **churned users only**, with the objective of identifying distinct behavioral segments within this high-risk group. Instead of predicting churn, this step focuses on **understanding *how* and *why* different groups of users leave**, enabling more targeted and effective retention strategies.
+
+### Step 1: Feature Engineering
 **Encoding**
 ```python
 df_churn =df[df['Churn'] == 1]
@@ -340,7 +340,7 @@ The PCA results show that the first three principal components explain over **95
 
 This confirms that the churned-user behavior can be effectively represented in a low-dimensional space without significant information loss. As a result, these components provide a suitable foundation for clustering analysis, improving both computational efficiency and cluster separability.
 
-### Apply K Means Model
+### Step 2: Apply K Means Model
 **Choosing K**
 ```python
 from sklearn.cluster import KMeans
@@ -377,7 +377,8 @@ predicted_labels = kmeans.fit_predict(PCA_ds)
 PCA_ds['clusters']=predicted_labels
 df_churn['clusters']=predicted_labels
 ```
-### Model Evaluation
+
+###  Step 3: Model Evaluation
 **Silhouette Score**
 ```python
 from sklearn.metrics import silhouette_score
@@ -438,9 +439,25 @@ The feature importance analysis indicates that the churn user clusters are prima
 The next step focuses on **exploratory data analysis (EDA)** of these top features to clearly interpret each churn segment and translate the clustering results into actionable business recommendations.
 
 **EDA top features**
+
 <img width="1787" height="530" alt="image" src="https://github.com/user-attachments/assets/5d548b30-0f5a-42a9-97c1-5042010ce2f5" />
 
 **Distribution of Clusters**
+
 <img width="569" height="453" alt="image" src="https://github.com/user-attachments/assets/fcdc9148-e94b-4b82-9727-3b36b76752f4" />
 
-### Conclusion
+**Observation**
+| Aspect | Observation | Insight |
+|------|-------------|-------------|
+| **CashbackAmount** | Cluster 2 shows the highest cashback exposure, while Cluster 0 receives significantly lower cashback. | High promotional incentives alone do **not** guarantee retention, as the highest-cashback cluster still churns. |
+| **PreferredOrderCat** | Clear differences in purchasing behavior exist across clusters: Cluster 1 is mobile-focused, Cluster 2 mainly purchases phones and laptops, while Cluster 3 shows more diversified shopping patterns. | Churned users exhibit **distinct category preferences**, indicating multiple churn drivers rather than a single behavioral pattern. |
+| **DaySinceLastOrder** | Cluster 2 has the longest inactivity period, suggesting long-term or permanent churn, whereas Cluster 0 churns shortly after their last purchase. | Length of inactivity is a strong differentiator between churn segments, separating early disengagement from long-term abandonment. |
+| **Cluster Distribution** | Churned users are unevenly distributed across clusters, with Cluster 2 and Cluster 1 accounting for the majority. | Most churned users were previously **active or high-value customers**, not only early-stage or low-engagement users. |
+
+### Churn Segmentation Insights & Recommendations
+| Cluster | User Profile | Key Insights | Recommendations |
+|--------|--------------------------|--------------|--------------------------|
+| **Cluster 0 – Low-value early churned users** | Low-cashback users who churn shortly after their last purchase with scattered category behavior and low engagement. | This segment shows weak engagement and low customer value. Users disengage early without forming strong usage habits, and the cluster size is relatively small. | Avoid heavy retention investment. Apply low-cost, automated win-back tactics such as small time-limited vouchers or reminder notifications. From a business perspective, accepting churn from this segment is reasonable. |
+| **Cluster 1 – Mobile-focused churned users** | Users with a strong preference for Mobile products, moderate cashback, and medium time since last order. | Despite clear category interest, these users still churn, suggesting unmet expectations related to mobile product experience, pricing, or category-specific offerings rather than insufficient incentives. | Implement Mobile-focused retention strategies such as device bundles, accessory discounts, or trade-in programs. Prioritize personalized, category-specific campaigns over generic cashback incentives. |
+| **Cluster 2 – High-value but long-inactive churned users** | High-value users with the highest cashback exposure, long inactivity periods, and a focus on phones and laptops. | Strong financial incentives alone are insufficient to retain this group once their purchasing cycle ends or disengagement occurs. This segment represents long-term or potentially permanent churn. | Prioritize reactivation strategies such as upgrade-cycle campaigns, new product launches, and VIP comeback offers. If reactivation fails, reduce further investment to optimize marketing spend. |
+| **Cluster 3 – Multi-category churned users** | Users with diversified purchasing behavior across multiple categories, moderate cashback, and relatively long inactivity periods. | Churn behavior is likely driven by weak personalization rather than price sensitivity or dissatisfaction with a single category. | Apply cross-category promotions, personalized recommendations, and bundled offers to restore relevance and encourage repeat engagement. Strengthen personalization strategies for this segment. |
