@@ -447,7 +447,7 @@ The next step focuses on **exploratory data analysis (EDA)** of these top featur
 <img width="569" height="453" alt="image" src="https://github.com/user-attachments/assets/fcdc9148-e94b-4b82-9727-3b36b76752f4" />
 
 **Observation**
-| Aspect | Observation | Insight |
+| Aspect | Observation | Interpretation |
 |------|-------------|-------------|
 | **CashbackAmount** | Cluster 2 shows the highest cashback exposure, while Cluster 0 receives significantly lower cashback. | High promotional incentives alone do **not** guarantee retention, as the highest-cashback cluster still churns. |
 | **PreferredOrderCat** | Clear differences in purchasing behavior exist across clusters: Cluster 1 is mobile-focused, Cluster 2 mainly purchases phones and laptops, while Cluster 3 shows more diversified shopping patterns. | Churned users exhibit **distinct category preferences**, indicating multiple churn drivers rather than a single behavioral pattern. |
