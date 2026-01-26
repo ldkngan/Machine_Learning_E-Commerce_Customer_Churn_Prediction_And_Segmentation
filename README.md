@@ -6,7 +6,7 @@ This project addresses a real-world e-commerce problem: predicting customer chur
 
 ---
 
-## Table of Contents
+## 📋 Table of Contents
 1. Overview
 2. Exploratory Data Analysis (EDA)
 3. Churn Prediction Model
@@ -14,32 +14,32 @@ This project addresses a real-world e-commerce problem: predicting customer chur
 
 ---
 
-## Overview
-### Objective
+## ✨ Overview
+### 🎯 Objective
 - This project analyzes customer churn behavior for an e-commerce company and translates data into clear business insights that support **customer retention** and **targeted marketing strategies**.
 - Instead of focusing only on model performance, the project emphasizes **understanding customer behavior**, **identifying churn drivers**, and turning analysis results into actionable recommendations for the business.
 
-### This project aims to
+### 🔆 This project aims to
 - Analyze behavioral differences between churned and active customers using EDA.
 - Identify key churn drivers that impact customer retention.
 - Predict churn risk to help the business prioritize high-risk customers.
 - Segment churned customers into distinct groups based on behavior patterns.
 - Support data-driven decisions for personalized promotions and retention campaigns.
 
-### Main business questions addressed
+### 🔖 Main business questions addressed
 - What behaviors are most commonly associated with customer churn?
 - Which customer characteristics indicate a high risk of churn?
 - How can churned customers be grouped to design more effective re-engagement strategies?
 
-### This project is designed for
+### 👩‍💻 This project is designed for
 - Data Analysts & Business Analysts – To understand churn behavior, identify key drivers, and translate customer data into actionable retention insights.
 - Marketing & CRM Teams – To design targeted promotions and re-engagement campaigns based on customer segments and churn risk.
 - E-commerce Stakeholders – To support data-driven decisions that improve customer retention and lifetime value.
 
 ---
 
-## Part I: Exploratory Data Analysis
-### Step 1: Data Preprocessing
+## ⚙️ Part I: Exploratory Data Analysis
+### 📌 Step 1: Data Preprocessing
 This step ensures the dataset is clean, consistent, and suitable for modeling. The following preprocessing actions were performed:
 
 **Handling Missing Information**
@@ -57,7 +57,7 @@ This step ensures the dataset is clean, consistent, and suitable for modeling. T
 After completing the preprocessing steps, the final dataset contains **5,630 rows** and **20 features**.
 The dataset is fully prepared for modeling, with no remaining missing values, duplicated records, or same-meaning categorical values, ensuring consistency and reliability for downstream analysis, churn prediction and churn segmentation.
 
-### Step 2: Feature Engineering
+### 📌 Step 2: Feature Engineering
 In this step, raw variables were transformed into a machine-learning-ready format to improve model compatibility and performance.
 
 ```python
@@ -74,7 +74,7 @@ df_encoded = pd.get_dummies(df, columns=list_encode_columns, drop_first=True )
 
 This feature engineering step enables machine learning models to interpret categorical customer attributes correctly and prepares the dataset for scaling and model training.
 
-### Step 3: Apply base Random Forest model
+### 📌 Step 3: Apply base Random Forest model
 This section applies a baseline Random Forest model to understand key drivers of customer churn and extract actionable insights from feature importance.
 
 **Split train/test set**
@@ -130,7 +130,7 @@ Test Recall: 0.9969040247678018
 
 Based on the strong recall performance and acceptable generalization on the test set, the Random Forest model was used to extract **feature importance** in order to identify the key factors driving customer churn.
 
-### Step 4: Analyse Top 5 Features from Random Forest model
+### 📌 Step 4: Analyse Top 5 Features from Random Forest model
 **Show Feature Importance**
 ```python
 feats = {} # a dict to hold feature_name: feature_importance
@@ -161,7 +161,7 @@ plt.show()
 **Box Plot - Analyse Top Features**
 <img width="1824" height="817" alt="box plot" src="https://github.com/user-attachments/assets/d2f8ff15-2065-4da5-a5c6-c2825c1f174d" />
 
-### Key Insights & Recommendations to Reduce Churn
+### 💡 Key Insights & Recommendations to Reduce Churn
 | Feature | Box Plot Observation | Key Insight | Recommendation |
 |--------|----------------------|-------------|----------------|
 | **Tenure (Engagement Duration)** | Non-churned users show significantly longer tenure with a wide distribution, while churned users are heavily concentrated at very low tenure (median ~0–2). | Churned users are predominantly **new users** who leave before forming usage habits or realizing the platform’s value. | **Strengthen early-stage user engagement (first 1–3 months):** Improve onboarding, provide clear usage guidance, and offer incentives for first and second purchases to help users build habits early. |
@@ -172,8 +172,8 @@ plt.show()
 
 ---
 
-## Part II: Churn Prediction Model
-### Step 1: Baseline Model
+## 💻 Part II: Churn Prediction Model
+### 📌 Step 1: Baseline Model
 In this phase, a baseline machine learning model is built to establish an initial performance benchmark for churn prediction. A baseline model is trained using default or minimally adjusted parameters on the preprocessed and engineered dataset. Model performance is evaluated on a hold-out test set using appropriate metrics for imbalanced data, such as recall and balanced accuracy.
 ```python
 from sklearn.pipeline import Pipeline
@@ -235,7 +235,7 @@ Among the baseline models, **Random Forest** clearly outperforms the others acro
 
 Based on these results, **Random Forest** is selected as the **baseline model** for further improvement. The next step focuses on **hyperparameter tuning** to enhance recall and balanced accuracy while controlling overfitting.
 
-### Step 2: Hyperparameter Tuning
+### 📌 Step 2: Hyperparameter Tuning
 ```python
 from sklearn.model_selection import StratifiedKFold
 
@@ -281,7 +281,7 @@ print("Balanced Accuracy:", rf_grid.best_score_)
 Best Parameters:  {'bootstrap': False, 'max_depth': None, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}
 Balanced Accuracy: 0.8980785925441322
 ```
-### Step 3: Model Evaluation
+### 📌 Step 3: Model Evaluation
 ```python
 best_model = rf_grid.best_estimator_
 
@@ -304,10 +304,10 @@ These results demonstrate that the tuned model generalizes well to unseen data w
 
 ---
 
-## Part III: Churn Segmentation
+## 🧮 Part III: Churn Segmentation
 In this phase, **unsupervised learning** is applied to gain deeper insights into **churned users only**, with the objective of identifying distinct behavioral segments within this high-risk group. Instead of predicting churn, this step focuses on **understanding *how* and *why* different groups of users leave**, enabling more targeted and effective retention strategies.
 
-### Step 1: Feature Engineering
+### 📌 Step 1: Feature Engineering
 **Encoding**
 ```python
 df_churn =df[df['Churn'] == 1]
@@ -340,7 +340,7 @@ The PCA results show that the first three principal components explain over **95
 
 This confirms that the churned-user behavior can be effectively represented in a low-dimensional space without significant information loss. As a result, these components provide a suitable foundation for clustering analysis, improving both computational efficiency and cluster separability.
 
-### Step 2: Apply K Means Model
+### 📌 Step 2: Apply K Means Model
 **Choosing K**
 ```python
 from sklearn.cluster import KMeans
@@ -378,7 +378,7 @@ PCA_ds['clusters']=predicted_labels
 df_churn['clusters']=predicted_labels
 ```
 
-###  Step 3: Model Evaluation
+### 📌 Step 3: Model Evaluation
 **Silhouette Score**
 ```python
 from sklearn.metrics import silhouette_score
@@ -446,7 +446,7 @@ The next step focuses on **exploratory data analysis (EDA)** of these top featur
 
 <img width="569" height="453" alt="image" src="https://github.com/user-attachments/assets/fcdc9148-e94b-4b82-9727-3b36b76752f4" />
 
-**Observation**
+🔎 **Observation**
 | Aspect | Observation | Interpretation |
 |------|-------------|-------------|
 | **CashbackAmount** | Cluster 2 shows the highest cashback exposure, while Cluster 0 receives significantly lower cashback. | High promotional incentives alone do **not** guarantee retention, as the highest-cashback cluster still churns. |
@@ -454,7 +454,7 @@ The next step focuses on **exploratory data analysis (EDA)** of these top featur
 | **DaySinceLastOrder** | Cluster 2 has the longest inactivity period, suggesting long-term or permanent churn, whereas Cluster 0 churns shortly after their last purchase. | Length of inactivity is a strong differentiator between churn segments, separating early disengagement from long-term abandonment. |
 | **Cluster Distribution** | Churned users are unevenly distributed across clusters, with Cluster 2 and Cluster 1 accounting for the majority. | Most churned users were previously **active or high-value customers**, not only early-stage or low-engagement users. |
 
-### Churn Segmentation Insights & Recommendations
+### 💡 Churn Segmentation Insights & Recommendations
 | Cluster | User Profile | Key Insights | Recommendations |
 |--------|--------------------------|--------------|--------------------------|
 | **Cluster 0 – Low-value early churned users** | Low-cashback users who churn shortly after their last purchase with scattered category behavior and low engagement. | This segment shows weak engagement and low customer value. Users disengage early without forming strong usage habits, and the cluster size is relatively small. | Avoid heavy retention investment. Apply low-cost, automated win-back tactics such as small time-limited vouchers or reminder notifications. From a business perspective, accepting churn from this segment is reasonable. |
