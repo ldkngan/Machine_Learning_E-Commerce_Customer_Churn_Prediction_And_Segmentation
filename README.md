@@ -454,7 +454,7 @@ The next step focuses on **exploratory data analysis (EDA)** of these top featur
 | **DaySinceLastOrder** | Cluster 2 has the longest inactivity period, suggesting long-term or permanent churn, whereas Cluster 0 churns shortly after their last purchase. | Length of inactivity is a strong differentiator between churn segments, separating early disengagement from long-term abandonment. |
 | **Cluster Distribution** | Churned users are unevenly distributed across clusters, with Cluster 2 and Cluster 1 accounting for the majority. | Most churned users were previously **active or high-value customers**, not only early-stage or low-engagement users. |
 
-### 💡 Churn Segmentation Insights & Recommendations
+### 🚀 Churn Segmentation Insights & Recommendations
 | Cluster | User Profile | Key Insights | Recommendations |
 |--------|--------------------------|--------------|--------------------------|
 | **Cluster 0 – Low-value early churned users** | Low-cashback users who churn shortly after their last purchase with scattered category behavior and low engagement. | This segment shows weak engagement and low customer value. Users disengage early without forming strong usage habits, and the cluster size is relatively small. | Avoid heavy retention investment. Apply low-cost, automated win-back tactics such as small time-limited vouchers or reminder notifications. From a business perspective, accepting churn from this segment is reasonable. |
