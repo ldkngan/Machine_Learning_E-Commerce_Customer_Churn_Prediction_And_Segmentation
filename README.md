@@ -1,4 +1,4 @@
-# Machine Learning | E-Commerce Customer Churn Prediction & Segmentation
+# Predict and Segment E-Commerce Customer Churn Using Machine Learning
 ![churn prediction](https://github.com/user-attachments/assets/747e24ad-f63e-4b30-9639-efef4e6d2f5a)
 This project addresses a real-world e-commerce problem: predicting customer churn and designing targeted promotional strategies to retain users.
 - **Author:** Le Dang Kim Ngan
